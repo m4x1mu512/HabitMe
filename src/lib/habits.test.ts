@@ -48,6 +48,21 @@ describe("habit rules", () => {
       ["2026-10-16", "2026-10-17", "2026-10-18"],
     );
   });
+  it("schedules a future-start habit from its start date, not from today", () => {
+    const dates = reminderDates({ startDate: "2026-10-20", endDate: null }, "2026-10-16");
+    expect(dates[0]).toBe("2026-10-20");
+    expect(dates).toHaveLength(61);
+  });
+  it("schedules even when the start date is beyond the rolling window", () => {
+    const dates = reminderDates({ startDate: "2027-03-01", endDate: null }, "2026-10-16");
+    expect(dates[0]).toBe("2027-03-01");
+    expect(dates).toHaveLength(61);
+  });
+  it("keeps the rolling window for already-started habits", () => {
+    const dates = reminderDates({ startDate: "2026-10-10", endDate: null }, "2026-10-16");
+    expect(dates[0]).toBe("2026-10-16");
+    expect(dates).toHaveLength(61);
+  });
   it("demo habit is 09:00, open-ended, reminders off", () => {
     const d = createDemoHabit();
     expect([d.title, d.reminderTime, d.endDate, d.remindersEnabled]).toEqual([

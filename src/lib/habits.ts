@@ -89,14 +89,16 @@ export function autoArchive(habits: Habit[], today: string, nowIso = new Date().
   return { habits: next, expired };
 }
 
-/** Dates (yyyy-MM-dd) on which a one-off reminder should fire, never after endDate. */
+/** Dates (yyyy-MM-dd) on which a one-off reminder should fire, never after endDate.
+ *  The window is anchored at the later of `today` and `startDate`, so a future-start
+ *  habit gets its first 60 days scheduled up front instead of an empty list. */
 export function reminderDates(
   h: Pick<Habit, "startDate" | "endDate">,
   today: string,
   maxDays = SCHEDULE_WINDOW_DAYS,
 ): string[] {
   const from = h.startDate > today ? h.startDate : today;
-  const limit = todayISO(addDays(parseISO(today), maxDays));
+  const limit = todayISO(addDays(parseISO(from), maxDays));
   const to = h.endDate && h.endDate < limit ? h.endDate : limit;
   const out: string[] = [];
   for (let d = parseISO(from); todayISO(d) <= to; d = addDays(d, 1)) out.push(todayISO(d));

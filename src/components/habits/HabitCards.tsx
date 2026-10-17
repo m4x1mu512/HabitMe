@@ -4,12 +4,14 @@ import {
   BellOff,
   CalendarDays,
   Clock,
+  Hourglass,
   Pencil,
   RotateCcw,
   Trash2,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ARCHIVE_REASON_LABEL, formatDate, formatPeriod, type Habit } from "@/lib/habits";
+import { ARCHIVE_REASON_LABEL, formatDate, formatPeriod, todayISO, type Habit } from "@/lib/habits";
 
 const Row = ({ icon: Icon, children }: { icon: typeof Clock; children: React.ReactNode }) => (
   <li className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -29,6 +31,7 @@ export function HabitCard({
   onArchive: () => void;
   onDelete?: (() => void) | undefined;
 }) {
+  const notStarted = habit.startDate > todayISO();
   return (
     <article className="animate-rise rounded-2xl border bg-card p-4 shadow-sm">
       <div className="flex items-start gap-3">
@@ -36,7 +39,15 @@ export function HabitCard({
           <span className="text-lg font-bold leading-none tabular-nums">{habit.reminderTime}</span>
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="break-words text-lg font-semibold leading-snug">{habit.title}</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="break-words text-lg font-semibold leading-snug">{habit.title}</h3>
+            {notStarted && (
+              <Badge variant="outline" className="gap-1 border-primary/40 text-primary">
+                <Hourglass className="size-3" aria-hidden />
+                Ещё не началась
+              </Badge>
+            )}
+          </div>
           {habit.description && (
             <p className="mt-0.5 break-words text-sm text-muted-foreground">{habit.description}</p>
           )}
@@ -45,8 +56,9 @@ export function HabitCard({
       <ul className="mt-3 grid gap-1.5">
         <Row icon={Clock}>Напоминание в {habit.reminderTime}</Row>
         <Row icon={CalendarDays}>
-          С {formatDate(habit.startDate)} ·{" "}
-          {habit.endDate ? `до ${formatDate(habit.endDate)}` : "Бессрочно"}
+          {notStarted
+            ? `Начнётся ${formatDate(habit.startDate)} · ${habit.endDate ? `до ${formatDate(habit.endDate)}` : "Бессрочно"}`
+            : `С ${formatDate(habit.startDate)} · ${habit.endDate ? `до ${formatDate(habit.endDate)}` : "Бессрочно"}`}
         </Row>
         <Row icon={habit.remindersEnabled ? Bell : BellOff}>
           {habit.remindersEnabled ? "Уведомления включены" : "Уведомления выключены"}

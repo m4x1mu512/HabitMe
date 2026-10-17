@@ -1,4 +1,5 @@
 import { useEffect, useId, useState } from "react";
+import { addDays } from "date-fns";
 import {
   Sheet,
   SheetContent,
@@ -148,6 +149,26 @@ export function HabitForm({ open, habit, onCancel, onSave }: Props) {
                 onChange={(e) => set("startDate", e.target.value)}
                 {...aria("startDate")}
               />
+              <div className="flex gap-2">
+                {(
+                  [
+                    ["today", "Сегодня", todayISO()],
+                    ["tomorrow", "Завтра", todayISO(addDays(new Date(), 1))],
+                  ] as const
+                ).map(([key, label, date]) => (
+                  <Button
+                    key={key}
+                    type="button"
+                    variant={v.startDate === date ? "secondary" : "outline"}
+                    size="sm"
+                    className="h-9 flex-1"
+                    aria-pressed={v.startDate === date}
+                    onClick={() => set("startDate", date)}
+                  >
+                    {label}
+                  </Button>
+                ))}
+              </div>
               {err("startDate")}
             </div>
           </div>

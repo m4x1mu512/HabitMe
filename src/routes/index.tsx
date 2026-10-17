@@ -47,6 +47,8 @@ import {
   scheduleHabit,
 } from "@/lib/notifications";
 import { applyTheme } from "@/lib/theme";
+import { nextTab, type Tab } from "@/lib/tabs";
+import { useSwipeNav } from "@/hooks/use-swipe-nav";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,7 +69,6 @@ export const Route = createFileRoute("/")({
   component: HabitsApp,
 });
 
-type Tab = "habits" | "archive" | "settings";
 const TITLES: Record<Tab, string> = {
   habits: "Мои привычки",
   archive: "Архив",
@@ -289,6 +290,15 @@ function HabitsApp() {
   const active = sortByReminder(habits.filter((h) => h.status === "active"));
   const archived = sortByReminder(habits.filter((h) => h.status === "archived"));
 
+  // Horizontal swipe switches tabs; disabled while loading or any overlay is open.
+  const swipe = useSwipeNav(
+    (dir) => {
+      const next = nextTab(tab, dir);
+      if (next) setTab(next);
+    },
+    !loading && !formOpen && !toDelete && !expiredRestore,
+  );
+
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <header className="sticky top-0 z-20 bg-appbar pt-safe text-appbar-foreground shadow-sm">
@@ -300,7 +310,7 @@ function HabitsApp() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-28 pt-4">
+      <main {...swipe} className="mx-auto w-full max-w-2xl flex-1 px-4 pb-28 pt-4">
         {loading ? (
           <div
             role="status"
