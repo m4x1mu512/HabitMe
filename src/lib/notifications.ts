@@ -37,6 +37,31 @@ export async function ensurePermission(): Promise<PermissionState> {
   return state;
 }
 
+/** True if the OS allows exact alarms (Android 12+: «Будильники и напоминания»). */
+export async function checkExactAlarms(): Promise<PermissionState> {
+  if (!isNative()) return "unsupported";
+  try {
+    const { exact_alarm } = await LocalNotifications.checkExactNotificationSetting();
+    // The plugin union includes "prompt-with-rationale"; normalise to ours.
+    return exact_alarm === "granted" || exact_alarm === "denied" || exact_alarm === "prompt"
+      ? exact_alarm
+      : "unknown";
+  } catch {
+    return "unknown";
+  }
+}
+
+/** Opens the system screen where the user can allow exact alarms. */
+export async function openExactAlarmSettings(): Promise<boolean> {
+  if (!isNative()) return false;
+  try {
+    await LocalNotifications.changeExactNotificationSetting();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function cancelHabit(h: Pick<Habit, "scheduledIds" | "notificationId">) {
   if (!isNative()) return;
   const ids = new Set(h.scheduledIds ?? []);

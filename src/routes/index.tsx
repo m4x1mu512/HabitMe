@@ -39,11 +39,13 @@ import {
 } from "@/lib/storage";
 import {
   cancelHabit,
+  checkExactAlarms,
   checkPermission,
   ensurePermission,
   initNotifications,
   isNative,
   openAppSettings,
+  openExactAlarmSettings,
   scheduleHabit,
 } from "@/lib/notifications";
 import { applyTheme } from "@/lib/theme";
@@ -128,6 +130,26 @@ function HabitsApp() {
         deniedToast();
         return cleared;
       }
+      if ((await checkExactAlarms()) !== "granted") {
+        toast.warning(
+          "Без разрешения «Будильники и напоминания» Android может задерживать напоминание на несколько минут.",
+          {
+            duration: 10000,
+            action: {
+              label: "Включить",
+              onClick: () => {
+                openExactAlarmSettings().then((ok) => {
+                  if (!ok)
+                    toast.info(
+                      "Откройте «Настройки» Android → «Приложения» → «Мои привычки» → «Будильники и напоминания» и включите их.",
+                      { duration: 10000 },
+                    );
+                });
+              },
+            },
+          },
+        );
+      }
       try {
         return { ...h, ...(await scheduleHabit(h)) };
       } catch {
@@ -163,6 +185,7 @@ function HabitsApp() {
             `Срок действия завершён: ${expired.map((h) => `«${h.title}»`).join(", ")}. Перемещено в архив.`,
           );
         s.notificationPermission = await checkPermission().catch(() => "unknown" as const);
+        s.exactAlarmPermission = await checkExactAlarms().catch(() => "unknown" as const);
         // Re-plan limited habits so the rolling window stays filled.
         const refreshed: Habit[] = [];
         for (const h of next) {
@@ -290,6 +313,48 @@ function HabitsApp() {
   const active = sortByReminder(habits.filter((h) => h.status === "active"));
   const archived = sortByReminder(habits.filter((h) => h.status === "archived"));
 
+  // Latest state for async listeners (app resume, etc.).
+  const habitsRef = useRef(habits);
+  habitsRef.current = habits;
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
+
+  // When the app returns to the foreground (e.g. after the user grants
+  // «Будильники и напоминания» in system settings), re-check the permission
+  // and recreate active reminders as exact alarms if it was just granted.
+  useEffect(() => {
+    if (!isNative()) return;
+    let disposed = false;
+    const sub = CapApp.addListener("appStateChange", async ({ isActive }) => {
+      if (!isActive || disposed) return;
+      const perm = await checkExactAlarms().catch(() => "unknown" as const);
+      const was = settingsRef.current.exactAlarmPermission;
+      if (perm === was) return;
+      const s = { ...settingsRef.current, exactAlarmPermission: perm };
+      settingsRef.current = s;
+      setSettings(s);
+      saveSettings(s).catch(() => {});
+      if (perm === "granted" && was !== "granted") {
+        const refreshed: Habit[] = [];
+        for (const h of habitsRef.current) {
+          if (h.status === "active" && h.remindersEnabled) {
+            await cancelHabit(h).catch(() => {});
+            refreshed.push(
+              await scheduleHabit(h)
+                .then((ids) => ({ ...h, ...ids }))
+                .catch(() => h),
+            );
+          } else refreshed.push(h);
+        }
+        if (!disposed) await persist(refreshed);
+      }
+    });
+    return () => {
+      disposed = true;
+      sub.then((s) => s.remove());
+    };
+  }, [persist]);
+
   // Horizontal swipe switches tabs; disabled while loading or any overlay is open.
   const swipe = useSwipeNav(
     (dir) => {
@@ -369,6 +434,15 @@ function HabitsApp() {
               if (p === "denied") deniedToast();
             }}
             onOpenSettings={openAppSettings}
+            exactAlarm={settings.exactAlarmPermission}
+            onExactAlarmRequest={async () => {
+              const ok = await openExactAlarmSettings();
+              if (!ok)
+                toast.info(
+                  "Откройте «Настройки» Android → «Приложения» → «Мои привычки» → «Будильники и напоминания» и включите их.",
+                  { duration: 10000 },
+                );
+            }}
           />
         )}
       </main>

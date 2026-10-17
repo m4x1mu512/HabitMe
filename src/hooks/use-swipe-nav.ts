@@ -32,6 +32,7 @@ export function useSwipeNav(onSwipe: (dir: SwipeDir) => void, enabled: boolean) 
       }
       reset();
       const t = e.touches[0];
+      if (!t) return;
       startRef.current = { x: t.clientX, y: t.clientY };
       startTimeRef.current = Date.now();
     },
@@ -45,6 +46,7 @@ export function useSwipeNav(onSwipe: (dir: SwipeDir) => void, enabled: boolean) 
       return;
     }
     const t = e.touches[0];
+    if (!t || !startRef.current) return;
     if (
       isVerticalScroll(
         { x: startRef.current.x, y: startRef.current.y, t: startTimeRef.current },

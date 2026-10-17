@@ -11,5 +11,5 @@ export function nextTab(current: Tab, dir: "left" | "right"): Tab | null {
   const i = TAB_ORDER.indexOf(current);
   if (i < 0) return null;
   const n = dir === "left" ? i + 1 : i - 1;
-  return n >= 0 && n < TAB_ORDER.length ? TAB_ORDER[n] : null;
+  return TAB_ORDER[n] ?? null;
 }

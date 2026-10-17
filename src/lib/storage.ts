@@ -7,6 +7,7 @@ export type PermissionState = "granted" | "denied" | "prompt" | "unsupported" | 
 export interface AppSettings {
   theme: ThemeMode;
   notificationPermission: PermissionState;
+  exactAlarmPermission: PermissionState;
   seeded: boolean;
 }
 
@@ -16,6 +17,7 @@ const SETTINGS_KEY = "myhabits.settings.v1";
 export const defaultSettings: AppSettings = {
   theme: "system",
   notificationPermission: "unknown",
+  exactAlarmPermission: "unknown",
   seeded: false,
 };
 

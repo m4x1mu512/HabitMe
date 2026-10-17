@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Monitor, Moon, Settings2, Sun } from "lucide-react";
+import { AlarmClockCheck, Bell, Monitor, Moon, Settings2, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { PermissionState, ThemeMode } from "@/lib/storage";
@@ -27,12 +27,16 @@ export function SettingsView({
   permission,
   onRequest,
   onOpenSettings,
+  exactAlarm,
+  onExactAlarmRequest,
 }: {
   theme: ThemeMode;
   onTheme: (t: ThemeMode) => void;
   permission: PermissionState;
   onRequest: () => void;
   onOpenSettings: () => Promise<boolean>;
+  exactAlarm: PermissionState;
+  onExactAlarmRequest: () => void;
 }) {
   const [showHint, setShowHint] = useState(false);
   return (
@@ -97,6 +101,30 @@ export function SettingsView({
             </p>
           )}
         </div>
+      </section>
+      <section aria-labelledby="exact-h" className="rounded-2xl border bg-card p-4">
+        <h2 id="exact-h" className="mb-1 flex items-center gap-2 text-lg font-semibold">
+          <AlarmClockCheck className="size-5" aria-hidden /> Точные напоминания
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Статус: <span className="font-medium text-foreground">{PERM_LABEL[exactAlarm]}</span>
+        </p>
+        {exactAlarm === "denied" && (
+          <p role="alert" className="mt-2 rounded-lg bg-accent p-3 text-sm text-accent-foreground">
+            Без разрешения «Будильники и напоминания» Android может задерживать напоминания на
+            несколько минут.
+          </p>
+        )}
+        {exactAlarm === "denied" && (
+          <Button className="mt-3 h-11" onClick={onExactAlarmRequest}>
+            Включить точные напоминания
+          </Button>
+        )}
+        {exactAlarm === "unsupported" && (
+          <p className="mt-2 text-sm text-muted-foreground">
+            Установите приложение на Android, чтобы настроить точность напоминаний.
+          </p>
+        )}
       </section>
       <p className="text-center text-xs text-muted-foreground">
         Мои привычки · данные хранятся только на этом устройстве
