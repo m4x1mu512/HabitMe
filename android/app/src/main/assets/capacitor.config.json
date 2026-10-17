@@ -1,0 +1,20 @@
+{
+	"appId": "com.example.myhabits",
+	"appName": "Мои привычки",
+	"webDir": ".output/public",
+	"android": {
+		"adjustMarginsForEdgeToEdge": "auto",
+		"allowMixedContent": false
+	},
+	"plugins": {
+		"StatusBar": {
+			"overlaysWebView": false,
+			"style": "DARK",
+			"backgroundColor": "#111827"
+		},
+		"LocalNotifications": {
+			"smallIcon": "ic_stat_habit",
+			"iconColor": "#2F7A5B"
+		}
+	}
+}

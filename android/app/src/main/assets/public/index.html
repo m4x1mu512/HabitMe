@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" href="/assets/styles-BXSsKz7P.css" data-precedence="default" />
+    <title>Мои привычки — ежедневные напоминания</title>
+    <meta name="theme-color" content="#111827" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="description"
+      content="Простое приложение для привычек с локальными напоминаниями, архивом и тёмной темой."
+    />
+    <meta property="og:title" content="Мои привычки" />
+    <meta
+      property="og:description"
+      content="Привычки и ежедневные напоминания прямо на вашем Android."
+    />
+    <link rel="modulepreload" href="/assets/index-D7gvpaO6.js" />
+    <link rel="modulepreload" href="/assets/routes-CBtYWpb6.js" />
+    <link rel="modulepreload" href="/assets/dist-HTnr3vf7.js" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <!--$-->
+    <div class="flex min-h-dvh flex-col bg-background">
+      <header class="sticky top-0 z-20 bg-appbar pt-safe text-appbar-foreground shadow-sm">
+        <div class="mx-auto flex h-14 max-w-2xl items-center justify-between gap-2 px-4">
+          <h1 class="truncate text-xl font-bold">Мои привычки</h1>
+        </div>
+      </header>
+      <main class="mx-auto w-full max-w-2xl flex-1 px-4 pb-28 pt-4">
+        <div role="status" class="flex flex-col items-center gap-3 py-24 text-muted-foreground">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-loader-circle size-8 animate-spin"
+            aria-hidden="true"
+          >
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </svg>
+          Загрузка…
+        </div>
+      </main>
+      <nav
+        aria-label="Основная навигация"
+        class="fixed inset-x-0 bottom-0 z-20 border-t bg-card/95 pb-safe backdrop-blur"
+      >
+        <ul class="mx-auto grid max-w-2xl grid-cols-3">
+          <li>
+            <button
+              aria-current="page"
+              class="flex h-16 w-full flex-col items-center justify-center gap-1 text-xs font-medium transition-colors text-primary"
+            >
+              <span
+                class="flex h-8 w-14 items-center justify-center rounded-full transition-colors bg-secondary"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-list-checks size-5"
+                  aria-hidden="true"
+                >
+                  <path d="M13 5h8"></path>
+                  <path d="M13 12h8"></path>
+                  <path d="M13 19h8"></path>
+                  <path d="m3 17 2 2 4-4"></path>
+                  <path d="m3 7 2 2 4-4"></path></svg></span
+              >Привычки
+            </button>
+          </li>
+          <li>
+            <button
+              class="flex h-16 w-full flex-col items-center justify-center gap-1 text-xs font-medium transition-colors text-muted-foreground"
+            >
+              <span class="flex h-8 w-14 items-center justify-center rounded-full transition-colors"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-archive size-5"
+                  aria-hidden="true"
+                >
+                  <rect width="20" height="5" x="2" y="3" rx="1"></rect>
+                  <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"></path>
+                  <path d="M10 12h4"></path></svg></span
+              >Архив
+            </button>
+          </li>
+          <li>
+            <button
+              class="flex h-16 w-full flex-col items-center justify-center gap-1 text-xs font-medium transition-colors text-muted-foreground"
+            >
+              <span class="flex h-8 w-14 items-center justify-center rounded-full transition-colors"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-settings size-5"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
+                  ></path>
+                  <circle cx="12" cy="12" r="3"></circle></svg></span
+              >Настройки
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <script>
+      (function (a, f) {
+        let l;
+        try {
+          l = JSON.parse(sessionStorage.getItem(a) || "{}");
+        } catch {
+          return;
+        }
+        const n = l?.[f || history.state?.__TSR_key];
+        let c = !1;
+        for (const t in n) {
+          const e = n[t],
+            o = e?.scrollX,
+            s = e?.scrollY;
+          if (Number.isFinite(o) && Number.isFinite(s)) {
+            if (t === "window") (scrollTo(o, s), (c = !0));
+            else if (t)
+              try {
+                const r = document.querySelector(t);
+                r && ((r.scrollLeft = o), (r.scrollTop = s));
+              } catch {}
+          }
+        }
+        if (c) return;
+        const i = location.hash.slice(1);
+        if (i) {
+          const t = history.state?.__hashScrollIntoViewOptions ?? !0;
+          if (t) {
+            const e = document.getElementById(i);
+            e && e.scrollIntoView(t);
+          }
+          return;
+        }
+        scrollTo(0, 0);
+      })("tsr-scroll-restoration-v1_3");
+      document.currentScript.remove();
+    </script>
+    <!--/$-->
+    <section
+      aria-label="Notifications alt+T"
+      tabindex="-1"
+      aria-live="polite"
+      aria-relevant="additions text"
+      aria-atomic="false"
+      data-react-aria-top-layer="true"
+    ></section>
+    <script data-tsr-stream-part="">
+      (self.$R = self.$R || {})["tsr"] = [];
+      self.$_TSR = {
+        h() {
+          ((this.hydrated = !0), this.c());
+        },
+        e() {
+          ((this.streamEnded = !0), this.c());
+        },
+        c() {
+          this.hydrated && this.streamEnded && (delete self.$_TSR, delete self.$R.tsr);
+        },
+        p(e) {
+          this.initialized ? e() : this.buffer.push(e);
+        },
+        buffer: [],
+      };
+      $_TSR.router = (($R) =>
+        ($R[0] = {
+          manifest: ($R[1] = {
+            routes: ($R[2] = {
+              __root__: ($R[3] = {
+                preloads: ($R[4] = ["/assets/index-D7gvpaO6.js"]),
+                scripts: ($R[5] = [
+                  ($R[6] = {
+                    attrs: ($R[7] = {
+                      type: "module",
+                      async: !0,
+                      src: "/assets/index-D7gvpaO6.js",
+                    }),
+                  }),
+                ]),
+              }),
+              "/": ($R[8] = {
+                preloads: ($R[9] = ["/assets/routes-CBtYWpb6.js", "/assets/dist-HTnr3vf7.js"]),
+              }),
+            }),
+          }),
+          matches: ($R[10] = [
+            ($R[11] = { i: "__root__ ", u: 1792244261167, s: "success", ssr: !0 }),
+            ($R[12] = { i: "  ", u: 1792244261167, s: "success", ssr: !0 }),
+          ]),
+        }))($R["tsr"]);
+      $_TSR.e();
+      {
+        let s = document.currentScript,
+          p;
+        while ((p = s.previousElementSibling) && p.hasAttribute("data-tsr-stream-part")) p.remove();
+        s.remove();
+      }
+    </script>
+    <script type="module" async="" src="/assets/index-D7gvpaO6.js"></script>
+    <script>
+      document.currentScript.remove(); /*$tsr-stream-boundary*/
+    </script>
+  </body>
+</html>

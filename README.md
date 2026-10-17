@@ -21,19 +21,19 @@
 
 ## 1. Установка зависимостей
 
-Нужны Node.js 20+, для локальной сборки Android — JDK 17 и Android Studio (Android SDK 35).
+Нужны Node.js 20+, для локальной сборки Android — JDK 21 и Android Studio (Android SDK 35).
 
 ```bash
-npm ci        # или npm install, если нет package-lock.json
+npm ci        # или npm install
 npm run dev   # запуск в браузере для разработки
-npm run build # сборка веб-части в dist/client
+npm run build # сборка статического веб-бандла (.output/public)
 npm run preview
 npm test      # проверка правил приложения
 ```
 
 ## 2. Capacitor
 
-Capacitor уже подключён, папка `android/` уже создана. Веб-сборка лежит в `dist/client`
+Capacitor уже подключён, папка `android/` настроена. Статический бандл формируется в `.output/public`
 (в `capacitor.config.ts` это `webDir`). После любых изменений кода:
 
 ```bash

@@ -6,3 +6,5 @@ pnpm-lock.yaml
 package-lock.json
 bun.lock
 routeTree.gen.ts
+android/app/src/main/assets
+android/capacitor-cordova-android-plugins

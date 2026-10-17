@@ -16,6 +16,10 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
     // Release signing: values come from environment variables (GitHub Secrets) or
     // android/keystore.properties. Never commit the keystore or passwords.
     def keystorePropsFile = rootProject.file("keystore.properties")
@@ -58,10 +62,34 @@ dependencies {
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
-    implementation project(':capacitor-cordova-android-plugins')
+    if (project.findProject(':capacitor-cordova-android-plugins') != null) {
+        implementation project(':capacitor-cordova-android-plugins')
+    }
 }
 
 apply from: 'capacitor.build.gradle'
+
+// Auto-build web assets and sync if missing during Android Studio build
+task buildWebAssets {
+    doLast {
+        def assetsPublic = file("src/main/assets/public/index.html")
+        if (!assetsPublic.exists()) {
+            println "Web assets missing in Android project. Building web app and syncing Capacitor..."
+            def isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
+            def npmCmd = isWindows ? ["cmd", "/c", "npm", "run", "build"] : ["npm", "run", "build"]
+            def capCmd = isWindows ? ["cmd", "/c", "npx", "cap", "sync", "android"] : ["npx", "cap", "sync", "android"]
+            try {
+                def proc1 = npmCmd.execute(null, rootDir.parentFile)
+                proc1.waitForProcessOutput(System.out, System.err)
+                def proc2 = capCmd.execute(null, rootDir.parentFile)
+                proc2.waitForProcessOutput(System.out, System.err)
+            } catch (Exception e) {
+                println "Warning: Could not automatically build web assets: ${e.message}"
+            }
+        }
+    }
+}
+preBuild.dependsOn buildWebAssets
 
 try {
     def servicesJSON = file('google-services.json')

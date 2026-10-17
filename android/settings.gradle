@@ -1,5 +1,23 @@
+// Auto-install dependencies if node_modules is missing (e.g. freshly cloned project opened in Android Studio)
+def nodeModulesDir = new File(settingsDir, '../node_modules')
+if (!nodeModulesDir.exists()) {
+    println "node_modules not found. Running 'npm install'..."
+    def isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
+    def npmCmd = isWindows ? ["cmd", "/c", "npm", "install"] : ["npm", "install"]
+    try {
+        def proc = npmCmd.execute(null, settingsDir.parentFile)
+        proc.waitForProcessOutput(System.out, System.err)
+    } catch (Exception e) {
+        println "Warning: Could not automatically run npm install: ${e.message}"
+    }
+}
+
 include ':app'
-include ':capacitor-cordova-android-plugins'
-project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')
+
+def cordovaPluginsDir = new File(settingsDir, 'capacitor-cordova-android-plugins')
+if (cordovaPluginsDir.exists()) {
+    include ':capacitor-cordova-android-plugins'
+    project(':capacitor-cordova-android-plugins').projectDir = cordovaPluginsDir
+}
 
 apply from: 'capacitor.settings.gradle'
